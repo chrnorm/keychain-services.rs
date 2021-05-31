@@ -15,13 +15,12 @@ use crate::{
     signature::Signature,
 };
 use core_foundation::{
-    base::{CFIndexConvertible, CFType, CFTypeRef, FromVoid, TCFType},
+    base::{CFIndexConvertible, CFTypeRef, TCFType},
     data::{CFData, CFDataRef},
     error::CFErrorRef,
     string::{CFString, CFStringRef},
 };
 use std::{
-    ffi::c_void,
     fmt::{self, Debug},
     ptr,
 };
@@ -221,7 +220,10 @@ impl Key {
         query.add(unsafe { kSecClass }, &item::Class::Key.as_CFString());
         query.add(unsafe { kSecAttrKeyClass }, &key_class.as_CFString());
         if key_class == AttrKeyClass::Public {
-            query.add(unsafe { kSecAttrKeyType }, &self.key_type().unwrap().as_CFString());
+            query.add(
+                unsafe { kSecAttrKeyType },
+                &self.key_type().unwrap().as_CFString(),
+            );
             query.add(
                 unsafe { kSecAttrApplicationTag },
                 &self.application_tag().unwrap().as_CFType(),

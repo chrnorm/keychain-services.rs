@@ -33,3 +33,6 @@ untrusted = "0.6"
 
 [features]
 interactive-tests = []
+
+[[example]]
+name = "secure_enclave"

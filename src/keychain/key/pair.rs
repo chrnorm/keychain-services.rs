@@ -84,6 +84,7 @@ impl KeyPair {
 pub struct KeyPairGenerateParams {
     key_type: AttrKeyType,
     key_size: usize,
+    token_id: Option<AttrTokenId>,
     attrs: DictionaryBuilder,
 }
 
@@ -93,6 +94,7 @@ impl KeyPairGenerateParams {
         Self {
             key_type,
             key_size,
+            token_id: None,
             attrs: <_>::default(),
         }
     }
@@ -244,7 +246,7 @@ impl KeyPairGenerateParams {
     /// Wrapper for the `kSecAttrTokenID` attribute key. See:
     /// <https://developer.apple.com/documentation/security/ksecattrtokenid>
     pub fn token_id(mut self, value: AttrTokenId) -> Self {
-        self.attrs.add_attr(&value);
+        self.token_id = Some(value);
         self
     }
 }
@@ -254,6 +256,9 @@ impl From<KeyPairGenerateParams> for Dictionary {
         let mut result = DictionaryBuilder::new();
         result.add_attr(&params.key_type);
         result.add_number(AttrKind::KeySizeInBits, params.key_size as i64);
+        if let Some(token_id) = params.token_id {
+            result.add_attr(&token_id);
+        }
         result.add(
             unsafe { kSecPrivateKeyAttrs },
             &Dictionary::from(params.attrs),

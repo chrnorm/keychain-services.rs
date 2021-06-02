@@ -347,6 +347,12 @@ impl<'a> From<&'a [u8]> for AttrApplicationLabel {
     }
 }
 
+impl<'a> From<&'a str> for AttrApplicationLabel {
+    fn from(string: &str) -> Self {
+        Self::new(string.as_bytes())
+    }
+}
+
 impl TAttr for AttrApplicationLabel {
     fn kind(&self) -> AttrKind {
         AttrKind::ApplicationLabel
